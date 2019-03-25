@@ -1,8 +1,8 @@
 public interface Breaker {
 
-   void loadMessage();
+   void loadMessage(String pathToMessage);
 
-   void loadCipher();
+   void loadCipher(String pathToCipher);
 
-    void writeOutputFile();
+    void writeOutputFile(String pathToOutputFile);
 }

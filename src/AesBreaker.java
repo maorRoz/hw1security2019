@@ -1,19 +1,19 @@
 public class AesBreaker implements Breaker {
-    public AesBreaker(String[] args){
+    public AesBreaker(){
 
     }
     @Override
-    public void loadMessage() {
-
-    }
-
-    @Override
-    public void loadCipher() {
+    public void loadMessage(String pathToMessage) {
 
     }
 
     @Override
-    public void writeOutputFile() {
+    public void loadCipher(String pathToCipher) {
+
+    }
+
+    @Override
+    public void writeOutputFile(String pathToOutputFile) {
 
     }
 }

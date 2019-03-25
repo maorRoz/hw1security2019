@@ -1,8 +1,8 @@
 public interface EncryptorDecryptor {
-    void loadKeys();
+    void loadKeys(String pathToKeys);
 
-    void loadInputFileToEncryptDecrypt();
+    void loadInputFileToEncryptDecrypt(String pathToInputFile);
 
-    void writeOutputFile();
+    void writeOutputFile(String pathToOutputFile);
 
 }

@@ -10,13 +10,13 @@ public class ArgumentExtractor {
 
     private boolean expectingOutputFile = false;
 
-    private String pathToInputFile;
-    private String pathToKeys;
+    private String pathToInputFile = "";
+    private String pathToKeys = "";
 
-    private String pathToMessageFile;
-    private String pathToCipherFile;
+    private String pathToMessageFile = "";
+    private String pathToCipherFile = "";
 
-    private String pathToOutputFile;
+    private String pathToOutputFile = "";
 
 
     private void turnOffFlags (){
@@ -47,18 +47,22 @@ public class ArgumentExtractor {
     private void processArgumentPath(String argument){
         if(expectingKeysFile){
             pathToKeys = argument;
+            return;
         }
 
         if(expectingInputFile){
             pathToInputFile = argument;
+            return;
         }
 
         if(expectingMessageFile){
             pathToMessageFile = argument;
+            return;
         }
 
         if(expectingCipherFile){
             pathToCipherFile = argument;
+            return;
         }
 
         if(expectingOutputFile){
@@ -68,7 +72,7 @@ public class ArgumentExtractor {
 
     private void processArgument(String argument){
         if(argument.length() == 2 && argument.charAt(0) == '-'){
-            processArgumentFlag(argument.charAt(0));
+            processArgumentFlag(argument.charAt(1));
         } else {
             processArgumentPath(argument);
         }
@@ -78,6 +82,10 @@ public class ArgumentExtractor {
         for(String argument : args ){
             processArgument(argument);
         }
+    }
+
+    public boolean toBreak(){
+        return toBreakFlag;
     }
 
     public boolean toDecrypt(){

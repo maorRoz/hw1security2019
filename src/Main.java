@@ -9,15 +9,22 @@ public class Main {
             return;
         }
 
-        encryptorDescryptor = new AesEncryptorDecryptor();
-        encryptorDescryptor.loadKeys();
-        encryptorDescryptor.loadInputFileToEncryptDecrypt();
-        encryptorDescryptor.writeOutputFile();
-
+        encryptorDescryptor = new AesEncryptorDecryptor(argumentExtractor.toEncrypt());
+        encryptorDescryptor.loadKeys(argumentExtractor.getPathToKeys());
+        encryptorDescryptor.loadInputFileToEncryptDecrypt(argumentExtractor.getPathToInputFile());
+        encryptorDescryptor.writeOutputFile(argumentExtractor.getPathToOutputFile());
     }
 
     private static void doBreaking(ArgumentExtractor argumentExtractor){
-        breaker = new AesBreaker(argumentExtractor);
+        if(argumentExtractor.getPathToMessageFile().isEmpty() || argumentExtractor.getPathToCipherFile().isEmpty()
+                || argumentExtractor.getPathToOutputFile().isEmpty()){
+            return;
+        }
+
+        breaker = new AesBreaker();
+        breaker.loadMessage(argumentExtractor.getPathToMessageFile());
+        breaker.loadCipher(argumentExtractor.getPathToCipherFile());
+        breaker.writeOutputFile(argumentExtractor.getPathToOutputFile());
     }
 
     public static void main(String[] args) {
@@ -28,7 +35,7 @@ public class Main {
         ArgumentExtractor argumentExtractor = new ArgumentExtractor(args);
         if(argumentExtractor.toEncryptDecrypt()){
             doEncryptDecrypt(argumentExtractor);
-        } else {
+        } else if(argumentExtractor.toBreak()){
             doBreaking(argumentExtractor);
         }
 
