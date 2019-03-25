@@ -4,5 +4,7 @@ public interface Breaker {
 
    void loadCipher(String pathToCipher);
 
+   void findKeys();
+
     void writeOutputFile(String pathToOutputFile);
 }
