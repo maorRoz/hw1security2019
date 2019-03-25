@@ -1,6 +1,3 @@
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
  import java.util.Arrays;
 
 public class AesEncryptorDecryptor implements EncryptorDecryptor {
