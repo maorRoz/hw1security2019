@@ -1,3 +1,6 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class AesBreaker implements Breaker {
 
     private byte[] messageByteArray;
@@ -24,6 +27,12 @@ public class AesBreaker implements Breaker {
 
     @Override
     public void writeOutputFile(String pathToOutputFile) {
-
+        try (FileOutputStream stream = new FileOutputStream(pathToOutputFile)) {
+            for(byte[] key: keys){
+                stream.write(key);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

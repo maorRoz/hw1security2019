@@ -3,12 +3,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class utils {
-    public static void shiftRows() {
-
+    public static byte[] shiftRows(byte[] inputByteArray) {
+        return inputByteArray;
     }
 
-    public static void addRoundKeys() {
-
+    public static byte[] addRoundKeys(byte[] inputByteArray, byte[] key) {
+        return inputByteArray;
     }
 
     public static byte[] loadFile(String filePath){
