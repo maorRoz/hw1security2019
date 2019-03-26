@@ -8,7 +8,9 @@ public class AesBreaker implements Breaker {
     private byte[][] keys;
 
     public AesBreaker(){
-        keys = new byte[3][16];
+        keys = null;
+        messageByteArray = null;
+        cipherByteArray = null;
     }
     @Override
     public void loadMessage(String pathToMessage) {
@@ -22,11 +24,21 @@ public class AesBreaker implements Breaker {
 
     @Override
     public void findKeys() {
+        if(messageByteArray == null || cipherByteArray == null){
+            return;
+        }
 
+        keys = new byte[3][16];
+        //@Todo - add handling for each 128 bit/16 byte
+        //@Todo - add logic
     }
 
     @Override
     public void writeOutputFile(String pathToOutputFile) {
+        if(keys == null){
+            return;
+        }
+
         try (FileOutputStream stream = new FileOutputStream(pathToOutputFile)) {
             for(byte[] key: keys){
                 stream.write(key);

@@ -10,15 +10,19 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
     private byte[] outputMessageByteArray;
 
     public AesEncryptorDecryptor(boolean toEncrypt){
-        keys = new byte[3][16];
+        keys = null;
+        inputByteArray = null;
+        outputMessageByteArray = null;
 
         this.toEncrypt = toEncrypt;
     }
     @Override
     public void loadKeys(String pathToKeys) {
         byte[] keysByteArray = utils.loadFile(pathToKeys);
+
         int i = 0;
         int maxKeyByteSize = 16;
+        keys = new byte[3][16];
         for(byte[] key : keys){
             key = Arrays.copyOfRange(keysByteArray, i * maxKeyByteSize, (i + 1) * maxKeyByteSize - 1);
             i++;
@@ -52,6 +56,7 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
         outputMessageByteArray = inputByteArray;
         byte[][] reversedKeys = keys;
         Collections.reverse(Arrays.asList(reversedKeys));
+        //@Todo - add handling for each 128 bit/16 byte
         for(byte[] key : keys) {
             outputMessageByteArray = decrypt(outputMessageByteArray, key);
         }
@@ -59,6 +64,10 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
     @Override
     public void encryptDecrypt() {
+        if(inputByteArray == null || keys == null){
+            return;
+        }
+
         if(toEncrypt){
             startEncryption();
         } else {
@@ -68,6 +77,10 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
     @Override
     public void writeOutputFile(String pathToOutputFile) {
+        if(outputMessageByteArray == null){
+            return;
+        }
+
         try (FileOutputStream stream = new FileOutputStream(pathToOutputFile)) {
             stream.write(outputMessageByteArray);
         } catch (IOException e) {

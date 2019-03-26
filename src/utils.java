@@ -4,10 +4,12 @@ import java.io.InputStream;
 
 public class utils {
     public static byte[] shiftRows(byte[] inputByteArray) {
+        //@Todo - add logic
         return inputByteArray;
     }
 
     public static byte[] addRoundKeys(byte[] inputByteArray, byte[] key) {
+        //@Todo - add logic
         return inputByteArray;
     }
 
@@ -17,10 +19,6 @@ public class utils {
         try(InputStream inputStream = new FileInputStream(filePath)){
             buffer = new byte[inputStream.available()];
             inputStream.read(buffer);
-
-            for(byte b : buffer){
-                System.out.printf("%02x", b);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

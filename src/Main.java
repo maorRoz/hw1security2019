@@ -12,6 +12,7 @@ public class Main {
         encryptorDescryptor = new AesEncryptorDecryptor(argumentExtractor.toEncrypt());
         encryptorDescryptor.loadKeys(argumentExtractor.getPathToKeys());
         encryptorDescryptor.loadInputFileToEncryptDecrypt(argumentExtractor.getPathToInputFile());
+        encryptorDescryptor.encryptDecrypt();
         encryptorDescryptor.writeOutputFile(argumentExtractor.getPathToOutputFile());
     }
 
@@ -24,6 +25,7 @@ public class Main {
         breaker = new AesBreaker();
         breaker.loadMessage(argumentExtractor.getPathToMessageFile());
         breaker.loadCipher(argumentExtractor.getPathToCipherFile());
+        breaker.findKeys();
         breaker.writeOutputFile(argumentExtractor.getPathToOutputFile());
     }
 
