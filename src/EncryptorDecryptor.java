@@ -3,7 +3,7 @@ public interface EncryptorDecryptor {
 
     void loadInputFileToEncryptDecrypt(String pathToInputFile);
 
-    void encryptDecrypt();
+    byte[] encryptDecrypt();
 
     void writeOutputFile(String pathToOutputFile);
 

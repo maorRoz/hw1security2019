@@ -23,14 +23,17 @@ public class AesBreaker implements Breaker {
     }
 
     @Override
-    public void findKeys() {
+    public byte[][] findKeys() {
         if(messageByteArray == null || cipherByteArray == null){
-            return;
+            return null;
         }
 
         keys = new byte[3][16];
         //@Todo - add handling for each 128 bit/16 byte
         //@Todo - add logic
+
+
+        return keys;
     }
 
     @Override

@@ -16,7 +16,7 @@ public class KeyGenerator {
         }
 
         done = true;
-        byte[] currentKey = key;
+        byte[] currentKey = key.clone();
 
         for(int i = key.length - 1; i >= 0; i--){
             if((key[i] & 0xFF) == 255){

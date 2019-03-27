@@ -20,12 +20,10 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
     public void loadKeys(String pathToKeys) {
         byte[] keysByteArray = utils.loadFile(pathToKeys);
 
-        int i = 0;
         int maxKeyByteSize = 16;
         keys = new byte[3][16];
-        for(byte[] key : keys){
-            key = Arrays.copyOfRange(keysByteArray, i * maxKeyByteSize, (i + 1) * maxKeyByteSize - 1);
-            i++;
+        for(int i = 0; i < keys.length; i++){
+            keys[i] = Arrays.copyOfRange(keysByteArray, i * maxKeyByteSize, (i + 1) * maxKeyByteSize);
         }
     }
 
@@ -40,11 +38,23 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
     }
 
-    private void startEncryption(){
+    private byte[] startEncryption(){
         outputMessageByteArray = inputByteArray;
-        for(byte[] key : keys) {
-            outputMessageByteArray = encrypt(outputMessageByteArray, key);
+
+        int blockSize = 16;
+        for(int i = 0; i < outputMessageByteArray.length; i+= blockSize){
+            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i * 16, (i + 1) * blockSize);
+
+            for(byte[] key : keys) {
+                currentBlockMessageByteArray = encrypt(currentBlockMessageByteArray, key);
+            }
+
+            for(int j = i, k = 0; k < currentBlockMessageByteArray.length; j++, k++){
+                outputMessageByteArray[j] = currentBlockMessageByteArray[k];
+            }
         }
+
+        return outputMessageByteArray;
     }
 
     private byte[] decrypt(byte[] currentInputByteArray, byte[] key){
@@ -52,27 +62,38 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
         return utils.shiftRows(roundedInputByteArray);
     }
 
-    private void startDecryption(){
+    private byte[] startDecryption(){
         outputMessageByteArray = inputByteArray;
         byte[][] reversedKeys = keys;
         Collections.reverse(Arrays.asList(reversedKeys));
-        //@Todo - add handling for each 128 bit/16 byte
-        for(byte[] key : keys) {
-            outputMessageByteArray = decrypt(outputMessageByteArray, key);
+
+        int blockSize = 16;
+        for(int i = 0; i < outputMessageByteArray.length; i+= blockSize){
+            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i * 16, (i + 1) * blockSize);
+
+            for(byte[] key : keys) {
+                currentBlockMessageByteArray = decrypt(currentBlockMessageByteArray, key);
+            }
+
+            for(int j = i, k = 0; k < currentBlockMessageByteArray.length; j++, k++){
+                outputMessageByteArray[j] = currentBlockMessageByteArray[k];
+            }
         }
+
+        return outputMessageByteArray;
     }
 
     @Override
-    public void encryptDecrypt() {
+    public byte[] encryptDecrypt() {
         if(inputByteArray == null || keys == null){
-            return;
+            return null;
         }
 
         if(toEncrypt){
-            startEncryption();
-        } else {
-            startDecryption();
+            return startEncryption();
         }
+
+        return startDecryption();
     }
 
     @Override
