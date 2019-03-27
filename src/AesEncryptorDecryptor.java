@@ -59,7 +59,7 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
     private byte[] decrypt(byte[] currentInputByteArray, byte[] key){
         byte[] roundedInputByteArray = utils.addRoundKeys(currentInputByteArray, key);
-        return utils.shiftRows(roundedInputByteArray);
+        return utils.revertShiftRows(roundedInputByteArray);
     }
 
     private byte[] startDecryption(){
