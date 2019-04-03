@@ -32,12 +32,6 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
         inputByteArray = utils.loadFile(pathToInputFile);
     }
 
-    private byte[] encrypt(byte[] currentInputByteArray, byte[] key){
-        byte[] shiftedInputByteArray = utils.shiftRows(currentInputByteArray);
-        return utils.addRoundKeys(shiftedInputByteArray, key);
-
-    }
-
     private byte[] startEncryption(){
         outputMessageByteArray = inputByteArray;
 
@@ -46,7 +40,7 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
             byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i * 16, (i + 1) * blockSize);
 
             for(byte[] key : keys) {
-                currentBlockMessageByteArray = encrypt(currentBlockMessageByteArray, key);
+                currentBlockMessageByteArray = utils.encrypt(currentBlockMessageByteArray, key);
             }
 
             for(int j = i, k = 0; k < currentBlockMessageByteArray.length; j++, k++){

@@ -29,9 +29,20 @@ public class AesBreaker implements Breaker {
         }
 
         keys = new byte[3][16];
-        //@Todo - add handling for each 128 bit/16 byte
-        //@Todo - add logic
+        //choose the two first keys
+        for(int i = 0; i < keys[0].length; i++){
+            keys[0][i] = 0;
+            keys[1][i] = 1;
+        }
 
+        //calculate the third key
+
+        byte[] cipherAfterFirstKey = utils.encrypt(messageByteArray, byte[0]);
+        byte[] cipherAfterSecondKey = utils.encrypt(cipherAfterFirstKey, byte[1]);
+
+        //k3 = c XOR shiftRows(cipherAfterSecondKey)
+
+        keys[2] = utils.addRoundKeys(cipherByteArray, utils.shiftRows(cipherAfterSecondKey));
 
         return keys;
     }
