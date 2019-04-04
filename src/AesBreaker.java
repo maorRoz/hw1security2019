@@ -37,8 +37,8 @@ public class AesBreaker implements Breaker {
 
         //calculate the third key
 
-        byte[] cipherAfterFirstKey = utils.encrypt(messageByteArray, byte[0]);
-        byte[] cipherAfterSecondKey = utils.encrypt(cipherAfterFirstKey, byte[1]);
+        byte[] cipherAfterFirstKey = utils.encrypt(messageByteArray, keys[0]);
+        byte[] cipherAfterSecondKey = utils.encrypt(cipherAfterFirstKey, keys[1]);
 
         //k3 = c XOR shiftRows(cipherAfterSecondKey)
 

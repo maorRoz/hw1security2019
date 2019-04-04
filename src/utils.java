@@ -61,7 +61,7 @@ public class utils {
         return buffer;
     }
 
-    public byte[] encrypt(byte[] currentInputByteArray, byte[] key){
+    public static byte[] encrypt(byte[] currentInputByteArray, byte[] key){
         byte[] shiftedInputByteArray = utils.shiftRows(currentInputByteArray);
         return utils.addRoundKeys(shiftedInputByteArray, key);
 
