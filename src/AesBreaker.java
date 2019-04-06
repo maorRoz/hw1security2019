@@ -1,5 +1,6 @@
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class AesBreaker implements Breaker {
 	private EncryptorDecryptor encryptorDescryptor;
@@ -38,8 +39,9 @@ public class AesBreaker implements Breaker {
         }
 
         //calculate the third key
+
         this.encryptorDescryptor.setInputArray(messageByteArray);
-        keys[2] = cipherByteArray;
+        keys[2] = utils.transposeMatrix(Arrays.copyOfRange(cipherByteArray, 0, 16));
         this.encryptorDescryptor.setKeys(keys);
         keys[2] = this.encryptorDescryptor.encryptDecrypt();
 
