@@ -16,6 +16,15 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
         this.toEncrypt = toEncrypt;
     }
+    
+    public void setInputArray(byte[] input) {
+    	inputByteArray = input;
+    }
+    
+    public void setKeys(byte[][] keysInput) {
+    	keys = keysInput;
+    }
+    
     @Override
     public void loadKeys(String pathToKeys) {
         byte[] keysByteArray = utils.loadFile(pathToKeys);
@@ -24,6 +33,7 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
         keys = new byte[3][16];
         for(int i = 0; i < keys.length; i++){
             keys[i] = Arrays.copyOfRange(keysByteArray, i * maxKeyByteSize, (i + 1) * maxKeyByteSize);
+            keys[i] = utils.transposeMatrix(keys[i]);
         }
     }
 
@@ -36,24 +46,22 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
         outputMessageByteArray = inputByteArray;
 
         int blockSize = 16;
-        for(int i = 0; i < outputMessageByteArray.length; i+= blockSize){
-            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i * 16, (i + 1) * blockSize);
-
+        for(int i = 0; i < outputMessageByteArray.length; i+=blockSize){
+        	int destIndex = ((i + blockSize) > outputMessageByteArray.length) ? outputMessageByteArray.length : (i + blockSize);
+            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i, destIndex);
+            currentBlockMessageByteArray = utils.transposeMatrix(currentBlockMessageByteArray);
+            
             for(byte[] key : keys) {
                 currentBlockMessageByteArray = utils.encrypt(currentBlockMessageByteArray, key);
             }
-
+            
+            currentBlockMessageByteArray = utils.transposeMatrix(currentBlockMessageByteArray);
             for(int j = i, k = 0; k < currentBlockMessageByteArray.length; j++, k++){
                 outputMessageByteArray[j] = currentBlockMessageByteArray[k];
             }
         }
 
         return outputMessageByteArray;
-    }
-
-    private byte[] decrypt(byte[] currentInputByteArray, byte[] key){
-        byte[] roundedInputByteArray = utils.addRoundKeys(currentInputByteArray, key);
-        return utils.revertShiftRows(roundedInputByteArray);
     }
 
     private byte[] startDecryption(){
@@ -63,12 +71,13 @@ public class AesEncryptorDecryptor implements EncryptorDecryptor {
 
         int blockSize = 16;
         for(int i = 0; i < outputMessageByteArray.length; i+= blockSize){
-            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i * 16, (i + 1) * blockSize);
-
-            for(byte[] key : keys) {
-                currentBlockMessageByteArray = decrypt(currentBlockMessageByteArray, key);
+            byte[] currentBlockMessageByteArray = Arrays.copyOfRange(outputMessageByteArray, i , (i + blockSize));
+            currentBlockMessageByteArray = utils.transposeMatrix(currentBlockMessageByteArray);
+            for(byte[] key : reversedKeys) {
+                currentBlockMessageByteArray = utils.decrypt(currentBlockMessageByteArray, key);
             }
-
+            
+            currentBlockMessageByteArray = utils.transposeMatrix(currentBlockMessageByteArray);
             for(int j = i, k = 0; k < currentBlockMessageByteArray.length; j++, k++){
                 outputMessageByteArray[j] = currentBlockMessageByteArray[k];
             }

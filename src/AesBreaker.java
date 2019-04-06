@@ -2,7 +2,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class AesBreaker implements Breaker {
-
+	private EncryptorDecryptor encryptorDescryptor;
     private byte[] messageByteArray;
     private byte[] cipherByteArray;
     private byte[][] keys;
@@ -11,7 +11,9 @@ public class AesBreaker implements Breaker {
         keys = null;
         messageByteArray = null;
         cipherByteArray = null;
+        this.encryptorDescryptor = new AesEncryptorDecryptor(true);
     }
+    
     @Override
     public void loadMessage(String pathToMessage) {
         messageByteArray = utils.loadFile(pathToMessage);
@@ -36,13 +38,10 @@ public class AesBreaker implements Breaker {
         }
 
         //calculate the third key
-
-        byte[] cipherAfterFirstKey = utils.encrypt(messageByteArray, byte[0]);
-        byte[] cipherAfterSecondKey = utils.encrypt(cipherAfterFirstKey, byte[1]);
-
-        //k3 = c XOR shiftRows(cipherAfterSecondKey)
-
-        keys[2] = utils.addRoundKeys(cipherByteArray, utils.shiftRows(cipherAfterSecondKey));
+        this.encryptorDescryptor.setInputArray(messageByteArray);
+        keys[2] = cipherByteArray;
+        this.encryptorDescryptor.setKeys(keys);
+        keys[2] = this.encryptorDescryptor.encryptDecrypt();
 
         return keys;
     }

@@ -6,5 +6,9 @@ public interface EncryptorDecryptor {
     byte[] encryptDecrypt();
 
     void writeOutputFile(String pathToOutputFile);
+    
+    void setInputArray(byte[] input);
+    
+    void setKeys(byte[][] keysInput);
 
 }
